@@ -5,7 +5,7 @@ import { EventTable } from './EventTable';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'xxx/EventTable',
+  title: 'EventTable',
   component: EventTable,
 } as ComponentMeta<typeof EventTable>;
 
