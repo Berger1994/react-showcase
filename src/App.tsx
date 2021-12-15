@@ -11,8 +11,9 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 
-const queryClient = new QueryClient();
+import AppProviders from '@context/index';
 
+const queryClient = new QueryClient();
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <div role="alert">
@@ -54,7 +55,7 @@ function Test() {
         <input {...register('firstName')} /> {/* register an input */}
         <input {...register('lastName', { required: true })} />
         {errors.lastName && <p>Last name is required.</p>}
-        <input {...register('age', { pattern: /\d+/ })} />
+        <input {...register('age', { pattern: /^\d+$/ })} />
         {errors.age && <p>Please enter number for age.</p>}
         <input type="submit" />
       </form>
@@ -65,16 +66,16 @@ function Test() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-
+      
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onReset={() => {
           // reset the state of your app so the error doesn't happen again
         }}
       >
-        <div>
+        <AppProviders>
           <Test />
-        </div>
+        </AppProviders>
       </ErrorBoundary>
 
       <ReactQueryDevtools />
