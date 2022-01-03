@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { styled,  Theme, CSSObject } from '@mui/material/styles';
-import { Drawer as MuiDrawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { styled, Theme, CSSObject } from '@mui/material/styles';
+import { AppBar, Drawer as MuiDrawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography, Box, IconButton } from '@mui/material';
 
 import { faObjectGroup } from '@fortawesome/free-solid-svg-icons/faObjectGroup';
+import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -47,24 +48,90 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 interface DashboardProps {
 }
 
+
+const drawerContent = (
+  <React.Fragment>
+    <List>
+      <ListItem button>
+        <ListItemIcon>
+          <FontAwesomeIcon size="lg" icon={faObjectGroup} />
+        </ListItemIcon>
+        <ListItemText primary="test" />
+      </ListItem>
+    </List>
+  </React.Fragment>
+);
+
 /**
  * Primary UI component for user interaction
  */
 export const Dashboard = ({
   ...props
 }: DashboardProps) => {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   return (
-    <Drawer open={true}>
+    <Box sx={{ display: 'flex' }}>
+      <AppBar
+        position="fixed"
+        sx={{
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+        }}
+      >
+        <Toolbar>
 
-      <List>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <FontAwesomeIcon size="lg" icon={faBars} />
+          </IconButton>
 
+          <Typography variant="h6" noWrap component="div">
+          </Typography>
+        </Toolbar>
+      </AppBar>
 
-        <ListItem button>
-          <ListItemIcon>
-            <FontAwesomeIcon icon={faObjectGroup} />
-          </ListItemIcon>
-        </ListItem>
-      </List>
-    </Drawer>
+      <Box
+        component="nav"
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+      >
+        <MuiDrawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+        >
+          {drawerContent}
+        </MuiDrawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', sm: 'block' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }} open>
+          <Toolbar />
+
+          {drawerContent}
+        </Drawer>
+      </Box>
+    </Box>
   );
 };
+
+/*
+*/
